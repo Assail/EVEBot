@@ -87,6 +87,7 @@ objectdef obj_Cargo
 		variable iterator CrystalIterator
 		variable collection:int Crystals
 		variable int MIN_CRYSTALS = ${Math.Calc[${Ship.ModuleList_MiningLaser.Used} + 1]}
+		Logger:Log["ReplenishCrystals"]
 
 		This.ActiveMiningCrystals:GetIterator[CrystalIterator]
 
@@ -94,6 +95,7 @@ objectdef obj_Cargo
 		if ${CrystalIterator:First(exists)}
 		do
 		{
+			Logger:Log["ReplenishCrystals: Setting active crystal: ${CrystalIterator.Value} ${CrystalIterator.Value}"]
 			;echo Setting active crystal: ${CrystalIterator.Value} ${CrystalIterator.Value}
 			Crystals:Set[${CrystalIterator.Value}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value}]} + 1]}]
 		}
@@ -1235,6 +1237,7 @@ objectdef obj_Cargo
 				}
 			}
 			while ${CargoIterator:Next(exists)}
+			call Inventory.Current.Stack
 		}
 		else
 		{
@@ -1242,17 +1245,25 @@ objectdef obj_Cargo
 		}
 	}
 
+	function TransferCompressedOreToShipCorpHangar(int64 dest)
+	{
+		Logger:Log["Transferring Compressed ore to Corp Hangar"]
+
+		call Inventory.ShipGeneralMiningHold.Activate
+		if ${Inventory.ShipGeneralMiningHold.IsCurrent}
+		{
+			call Inventory.Current.Stack
+			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE && Name =- \"Compressed\""]
+			call This.TransferListToShipCorporateHangar ${dest}
+		}
+
+		This.CargoToTransfer:Clear[]
+	}
+
+
 	function TransferOreToShipCorpHangar(int64 dest)
 	{
 		Logger:Log["Transferring Ore to Corp Hangar"]
-
-		call Inventory.ShipCargo.Activate
-		if ${Inventory.ShipCargo.IsCurrent}
-		{
-			call Inventory.Current.Stack
-			Inventory.Current:GetItems[This.CargoToTransfer, "CategoryID == CATEGORYID_ORE"]
-			call This.TransferListToShipCorporateHangar ${dest}
-		}
 
 		call Inventory.ShipGeneralMiningHold.Activate
 		if ${Inventory.ShipGeneralMiningHold.IsCurrent}

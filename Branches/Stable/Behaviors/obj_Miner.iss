@@ -344,9 +344,10 @@ objectdef obj_Miner
 			relay all -event EVEBot_Master_InBelt FALSE
 		}
 
+		;Logger:Log["ProcessState:${This.CurrentState}", LOG_DEBUG]
 		switch ${This.CurrentState}
 		{
-
+			
 			;	This means we're somewhere safe, and SetState wants us to stay there without spamming the UI
 			case IDLE
 				break
@@ -742,9 +743,24 @@ objectdef obj_Miner
 							}
 						}
 
-						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE
+						if ${Entity[${Orca.Escape}](exists)} && ${Entity[${Orca.Escape}].Distance} <= LOOT_RANGE 
 						{
-							call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
+
+							Logger:Log["ReplenishCrystals from ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+							call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}].ID}
+
+							Logger:Log["Emptying Compressed things to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+							call Cargo.TransferCompressedOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}
+
+							;if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
+							if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldThreeQuartersFull}) 
+							{
+								Logger:Log["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+								call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}
+								
+							}
+
+							;call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}]}
 						}
 
 						break
@@ -796,9 +812,12 @@ objectdef obj_Miner
 
 		; lets try to compress since solo compression is active
 		if (${Config.Miner.SoloCompressOreMode} && ${Ship.OreHoldHalfFull})
+		;if (${Config.Miner.SoloCompressOreMode} && ${Ship.OreHoldQuarterFull} || ${Config.Miner.SoloCompressOreMode} && ${Config.Miner.IceMining})
+		;if (${Config.Miner.SoloCompressOreMode} 
 		{
 			Logger:Log["Debug: Try To Compress"]
 			call Compress.CheckForCompression
+			EVEWindow["Inventory"]:StackAll
 		}
 
 		;	If we're in a station there's not going to be any mining going on.  This should clear itself up if it ever happens.
@@ -963,7 +982,18 @@ objectdef obj_Miner
 				call Inventory.ShipCargo.Activate
 			}
 
-			if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
+			Logger:Log["ReplenishCrystals from ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+			call Cargo.ReplenishCrystals ${Entity[${Orca.Escape}].ID}
+
+			if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)}) 
+			{
+					Logger:Log["Emptying Compressed things to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
+					call Cargo.TransferCompressedOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}
+					
+			}
+
+			;if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldHalfFull}) || ${Ship.CargoTenthFull}
+			if (${EVEWindow[Inventory].ChildWindow[${MyShip.ID}, ShipGeneralMiningHold](exists)} && ${Ship.OreHoldFull}) 
 			{
 					Logger:Log["Emptying ore to ${Entity[${Orca.Escape}].Name}'s Corporate Hangars"]
 					call Cargo.TransferOreToShipCorpHangar ${Entity[${Orca.Escape}].ID}

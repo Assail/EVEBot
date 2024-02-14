@@ -579,6 +579,7 @@ objectdef obj_Social inherits obj_BaseClass
 				if	${Me.CharID} != ${PilotIterator.Value.CharID} && \
 						${PilotIterator.Value.ToEntity(exists)} && \
 						${PilotIterator.Value.ToEntity.Distance} < ${Range} && \
+						${PilotIterator.Value.ToEntity.Distance} != 0 && \ 
 						!${PilotIterator.Value.ToFleetMember}
 				{
 					Logger:Log["PlayerInRange: ${PilotIterator.Value.Name} - ${EVEBot.MetersToKM_Str[${PilotIterator.Value.ToEntity.Distance}]}"]

@@ -263,7 +263,8 @@ objectdef obj_Drones inherits obj_BaseClass
 			}
 			if ${engageIndex.Used} > 0
 			{
-				EVE:DronesEngageMyTarget[engageIndex]
+				EVE:Execute[CmdDronesEngage]
+				;EVE:DronesEngageMyTarget[engageIndex]
 			}
 		}
 	}

@@ -376,7 +376,16 @@ objectdef obj_Asteroids
 				{
 					do
 					{
-						This.AsteroidList:Insert[${AsteroidIt.Value.ID}]
+						
+						if ${AsteroidIt.Value.FleetTag.Equal[""]}
+						{
+							This.AsteroidList:Insert[${AsteroidIt.Value.ID}]
+						}
+						else
+						{
+							echo "Skipping tagged rock" ${AsteroidIt.Value.Name} ${AsteroidIt.Value.FleetTag}
+						}
+						
 					}
 					while ${AsteroidIt:Next(exists)}
 				}

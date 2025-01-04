@@ -188,10 +188,48 @@ objectdef obj_AnomRatter inherits obj_BaseClass
 				if (${MyAnomalies_Iterator:First(exists)})
 					do
 					{
+						Logger:Log["Debug: AnomName (${MyAnomalies_Iterator.Value.Name}) DungeonID (${MyAnomalies_Iterator.Value.DungeonID})"]
 						if (${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
 						{
 							MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
 							break
+						}
+						; Blood gas = 110971 rock 110982
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Blood Haven (Both)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110971) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+							elseif ((${MyAnomalies_Iterator.Value.DungeonID} == 110982) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
+						}
+						
+						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Blood Haven (Rock)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
+						{
+							Logger:Log["Debug: Checking each anom till we find one we want to run"]
+							if ((${MyAnomalies_Iterator.Value.DungeonID} == 110982) && !${AnomSites.Contains[${MyAnomalies_Iterator.Value.Name}]})
+							{
+								Logger:Log["Debug: Anom Found and it isn't the one we are currently at so lets warp to it"]
+								relay all AnomSites:Add[${MyAnomalies_Iterator.Value.Name}]
+								MyCurrentSite:Set[${MyAnomalies_Iterator.Value.Name}]
+								wait 20
+								MyAnomalies_Iterator.Value:WarpTo[30000, FALSE]
+								break
+							}    
 						}
 						elseif (${Config.Combat.CurrentAnomTypeName.Equal["Guristas Haven (Both)"]} && !${MyAnomalies_Iterator.Value.Name.Equal[${MyCurrentSite}]})
 						{

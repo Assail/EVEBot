@@ -361,8 +361,18 @@ objectdef obj_Asteroids
 					{
 						if ${AsteroidIterator.Value.Distance} < ${This.MaxDistanceToAsteroid}
 						{
-							Logger:Log["${This.ObjectName}: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
-							call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+							if ${AsteroidIterator.Value.Distance} > WARP_RANGE 
+							{
+								Logger:Log["${This.ObjectName}: ChooseTargets: No Asteroids in range & All lasers idle: Warping nearest"]
+								call Ship.WarpToID ${AsteroidIterator.Value.ID}
+								return
+							}
+							else
+							{
+								Logger:Log["${This.ObjectName}: ChooseTargets: No Asteroids in range & All lasers idle: Approaching nearest"]
+								call Ship.Approach ${AsteroidIterator.Value} ${Ship.OptimalMiningRange}
+							}
+
 						}
 						else
 						{

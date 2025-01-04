@@ -305,9 +305,9 @@ objectdef obj_Defense_Drone inherits obj_BaseClass
 		variable index:activedrone ActiveDroneList
 
 		Me:GetActiveDrones[ActiveDroneList]
-		ActiveDroneList:ForEach["Logger:Log[Drone: \${ForEach.Value.ID} \${ForEach.Value.State} \${ForEach.Value.Target}]"]
+		;ActiveDroneList:ForEach["Logger:Log[Drone: \${ForEach.Value.ID} \${ForEach.Value.State} \${ForEach.Value.Target}]"]
 		ActiveDroneList:RemoveByQuery[${LSQueryCache[State != ENTITY_STATE_IDLE]}]
-		Logger:Log["${LogPrefix}: Found ${ActiveDroneList.Used} drones in state 0", LOG_DEBUG]
+		;Logger:Log["${LogPrefix}: Found ${ActiveDroneList.Used} drones in state 0", LOG_DEBUG]
 		ActiveDroneList:Collapse
 
 		if ${ActiveDroneList.Used} > 0

@@ -87,7 +87,6 @@ objectdef obj_Cargo
 		variable iterator CrystalIterator
 		variable collection:int Crystals
 		variable int MIN_CRYSTALS = ${Math.Calc[${Ship.ModuleList_MiningLaser.Used} + 1]}
-		Logger:Log["ReplenishCrystals"]
 
 		This.ActiveMiningCrystals:GetIterator[CrystalIterator]
 
@@ -95,7 +94,6 @@ objectdef obj_Cargo
 		if ${CrystalIterator:First(exists)}
 		do
 		{
-			Logger:Log["ReplenishCrystals: Setting active crystal: ${CrystalIterator.Value} ${CrystalIterator.Value}"]
 			;echo Setting active crystal: ${CrystalIterator.Value} ${CrystalIterator.Value}
 			Crystals:Set[${CrystalIterator.Value}, ${Math.Calc[${Crystals.Element[${CrystalIterator.Value}]} + 1]}]
 		}
